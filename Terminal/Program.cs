@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading;
 
 namespace Terminal
@@ -11,10 +12,11 @@ namespace Terminal
         /// <param name="obj">Id терминала</param>
         private static void NewConnection(object obj)
         {
-            using (var client = new ImpData.DataClient("NetTcpBinding_IData"))
+            var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminals/{(int)obj}");
+            using (var response = (HttpWebResponse)request.GetResponse())
             {
-                client.SendData((int)obj);
-                client.Close();
+                Console.WriteLine("StatusCode: {0}", response.StatusCode);
+                response.Close();
             }
         }
 

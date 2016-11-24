@@ -1,5 +1,5 @@
 ﻿using System;
-using System.ServiceModel;
+using System.ServiceModel.Web;
 
 using NLog;
 
@@ -16,7 +16,7 @@ namespace Server
         {
             try
             {
-                using (var host = new ServiceHost(typeof(Contracts.Implementations.Data)))
+                using (var host = new WebServiceHost(typeof(Implementations.Data)))
                 {
                     host.Open();
                     Logger.Info("Service started...");
