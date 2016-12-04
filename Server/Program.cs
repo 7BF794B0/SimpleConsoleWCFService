@@ -8,7 +8,7 @@ namespace Server
     class Program
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
+        
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

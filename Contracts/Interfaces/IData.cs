@@ -1,5 +1,6 @@
 ﻿using System.ServiceModel;
 using System.ServiceModel.Web;
+using Infrastructure;
 
 namespace Contracts.Interfaces
 {
@@ -7,11 +8,20 @@ namespace Contracts.Interfaces
     public interface IData
     {
         /// <summary>
-        /// Зафиксировать подключение нового пользователя.
+        /// Зафиксировать подключение нового терминала.
         /// </summary>
-        /// <param name="id">Id терминала</param>
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminals/{id}")]
+        /// <param name="terminalId">Id терминала.</param>
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminals/login/{terminalId}")]
         [OperationContract]
-        void SendData(string id);
+        void Login(string terminalId);
+
+        /// <summary>
+        /// Получить данные от терминала.
+        /// </summary>
+        /// <param name="terminalId">Id терминала.</param>
+        /// <param name="data">Телеметрические данные.</param>
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminals/{terminalId}")]
+        [OperationContract]
+        int SendData(string terminalId, Telemetry data);
     }
 }
