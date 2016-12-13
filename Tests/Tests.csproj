@@ -55,23 +55,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="InvalidData.cs" />
     <Compile Include="LogIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidData\DataSet1.cs" />
-    <Compile Include="ValidData\DataSet2.cs" />
-    <Compile Include="ValidData\DataSet3.cs" />
+    <Compile Include="ValidData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
-      <Project>{017b10ef-2b7c-48b3-af65-556ac09172ae}</Project>
-      <Name>Infrastructure</Name>
+    <ProjectReference Include="..\Contracts\Contracts.csproj">
+      <Project>{D12A1224-8465-4BDE-84F7-94A4AE8B8285}</Project>
+      <Name>Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="InvalidData\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ValidData.orderedtest">
+    <None Include="InvalidDataOrderedTest.orderedtest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="ValidDataOrderedTest.orderedtest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using System.ServiceModel;
 using System.ServiceModel.Web;
-using Infrastructure;
 
 namespace Contracts.Interfaces
 {
@@ -22,6 +21,6 @@ namespace Contracts.Interfaces
         /// <param name="data">Телеметрические данные.</param>
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminals/{terminalId}")]
         [OperationContract]
-        int SendData(string terminalId, Telemetry data);
+        ServiceStatusCode SendData(string terminalId, TelemetryCollection data);
     }
 }

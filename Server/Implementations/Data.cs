@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+
+using Contracts;
 using Contracts.Interfaces;
-using Infrastructure;
 using NLog;
 
 namespace Server.Implementations
@@ -11,72 +11,62 @@ namespace Server.Implementations
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly List<int> LoggedTerminals = new List<int>();
-        private static readonly List<Telemetry> DataSet = new List<Telemetry>();
 
         public void Login(string terminalId)
         {
             if (!LoggedTerminals.Contains(Convert.ToInt32(terminalId)))
                 LoggedTerminals.Add(Convert.ToInt32(terminalId));
 
-            Logger.Info($"The client with id:{terminalId} logged.");
+            Logger.Info($"The client with id: {terminalId} logged");
         }
 
-        public int SendData(string terminalId, Telemetry data)
+        public ServiceStatusCode SendData(string terminalId, TelemetryCollection lst)
         {
             if (LoggedTerminals.Contains(Convert.ToInt32(terminalId)))
             {
-                var tel = new Telemetry
+                for (int i = 0; i < lst.Collection.Count - 1; i++)
                 {
-                    Time = data.Time,
-                    Coordinates = data.Coordinates,
-                    Speed = data.Speed,
-                    Engine = data.Engine,
-                    TotalMileage = data.TotalMileage
-                };
-                DataSet.Add(tel);
-
-                if (DataSet.Count == 1)
-                {
-                    Logger.Info("");
-                    Logger.Info($"The client has connected with id: {terminalId}");
-                    Logger.Info($"Telemetry, Time: {data.Time}");
-                    Logger.Info($"Telemetry, Coordinates: {data.Coordinates}");
-                    Logger.Info($"Telemetry, Speed: {data.Speed}");
-                    Logger.Info($"Telemetry, Engine: {data.Engine}");
-                    Logger.Info($"Telemetry, TotalMileage: {data.TotalMileage}");
-
-                    return 200;
-                }
-
-                // Проверка на соответствие расстояний.
-                if (
-                    Math.Abs(DataSet[DataSet.Count - 2].Coordinates.GetDistanceTo(DataSet.Last().Coordinates) -
-                             (DataSet.Last().TotalMileage - DataSet[DataSet.Count - 2].TotalMileage) * 1000) < 500.0d) // Где 500 - это погрешность в измерениях [метры].
-                                                                                                                       // Хотя тесты показали, что точность можно ужесточить и уменьшить до ~70.
-                {
-                    // Время в пути.
-                    var time = (DataSet.Last().Time - DataSet[DataSet.Count - 2].Time).TotalHours;
-                    // Пройденное расстояние.
-                    var distance = DataSet.Last().TotalMileage - DataSet[DataSet.Count - 2].TotalMileage;
-
-                    // Проверка на соответствие скоростей и времени.
-                    if (Math.Abs(DataSet.Last().Speed - distance/time) < 5) // Где 5 - это погрешность в измерениях [км/ч]
+                    if (
+                        Math.Abs(lst.Collection[i].Coordinates.GetDistanceTo(lst.Collection[i + 1].Coordinates) -
+                                 (lst.Collection[i + 1].TotalMileageKm - lst.Collection[i].TotalMileageKm)*1000) < 500.0d) // Где 500 - это погрешность в измерениях [метры].
+                                                                                                                           // Хотя тесты показали, что точность можно ужесточить и уменьшить до ~70.
                     {
-                        Logger.Info("");
-                        Logger.Info($"The client has connected with id: {terminalId}");
-                        Logger.Info($"Telemetry, Time: {data.Time}");
-                        Logger.Info($"Telemetry, Coordinates: {data.Coordinates}");
-                        Logger.Info($"Telemetry, Speed: {data.Speed}");
-                        Logger.Info($"Telemetry, Engine: {data.Engine}");
-                        Logger.Info($"Telemetry, TotalMileage: {data.TotalMileage}");
+                        // Время в пути.
+                        var time = (lst.Collection[i + 1].Time - lst.Collection[i].Time).TotalHours;
+                        // Пройденное расстояние.
+                        var distance = lst.Collection[i + 1].TotalMileageKm - lst.Collection[i].TotalMileageKm;
 
-                        return 200;
+                        // Проверка на соответствие скоростей и времени.
+                        if (!(Math.Abs(lst.Collection[i + 1].SpeedKmh - distance / time) < 5)) // Где 5 - это погрешность в измерениях [км/ч]
+                        {
+                            Logger.Error($"The client with the id: {terminalId} sent is not the correct data.");
+                            return ServiceStatusCode.BadData;
+                        }
+                    }
+                    else
+                    {
+                        Logger.Error($"The client with the id: {terminalId} sent is not the correct data.");
+                        return ServiceStatusCode.BadData;
                     }
                 }
+
+                Logger.Info($"The client has connected with id: {terminalId}");
+                for (int i = 0; i < lst.Collection.Count; i++)
+                {
+                    Logger.Info("");
+                    Logger.Info($"Telemetry, DataSet#: {i + 1}");
+                    Logger.Info($"Telemetry, Time: {lst.Collection[i].Time}");
+                    Logger.Info($"Telemetry, Coordinates: {lst.Collection[i].Coordinates}");
+                    Logger.Info($"Telemetry, Speed: {lst.Collection[i].SpeedKmh}");
+                    Logger.Info($"Telemetry, Engine: {lst.Collection[i].Engine}");
+                    Logger.Info($"Telemetry, TotalMileage: {lst.Collection[i].TotalMileageKm}");
+                }
+
+                return ServiceStatusCode.GoodLogin;
             }
 
             Logger.Error($"The client with the id: {terminalId} could not send the data because it has not been logged.");
-            return 500;
+            return ServiceStatusCode.BadLogin;
         }
     }
 }
