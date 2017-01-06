@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Device.Location;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -20,7 +19,9 @@ namespace Tests
                 var tel1 = new Telemetry
                 {
                     Time = new DateTime(2016, 12, 4, 12, 0, 0),
-                    Coordinates = new GeoCoordinate(59.938048, 30.3141581), // Дворцовая площадь
+                    // Дворцовая площадь
+                    Latitude = 59.938048,
+                    Longitude = 30.3141581,
                     SpeedKmh = 0.0d,
                     Engine = true,
                     TotalMileageKm = 0.0d
@@ -29,7 +30,9 @@ namespace Tests
                 var tel2 = new Telemetry
                 {
                     Time = new DateTime(2016, 12, 4, 12, 30, 0), // За 30 минут
-                    Coordinates = new GeoCoordinate(60.1384927, 30.2175813), // Сертолово
+                    // Сертолово
+                    Latitude = 60.1384927,
+                    Longitude = 30.2175813,
                     SpeedKmh = 46.0d,
                     Engine = true,
                     TotalMileageKm = 23.0d // Прохали примерно 23 км
@@ -38,7 +41,9 @@ namespace Tests
                 var tel3 = new Telemetry
                 {
                     Time = new DateTime(2016, 12, 4, 13, 0, 0), // За 30 минут
-                    Coordinates = new GeoCoordinate(60.2059187, 29.7110901), // Зеленогорск
+                    // Зеленогорск
+                    Latitude = 60.2059187,
+                    Longitude = 29.7110901,
                     SpeedKmh = 58.0d,
                     Engine = false,
                     TotalMileageKm = 52.0d // Прохали примерно 29 км

@@ -9,9 +9,10 @@ using Contracts;
 
 namespace Terminal
 {
-    class Program
+    internal class Program
     {
         private static Timer _timer;
+        private static readonly RandomGenerator Rnd = new RandomGenerator();
 
         /// <summary>
         /// Авторизоваться на сервере.
@@ -42,7 +43,6 @@ namespace Terminal
         {
             try
             {
-                RandomGenerator rnd = new RandomGenerator();
                 var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminals/{(int)obj}");
                 request.ContentType = "application/json";
                 request.Method = "POST";
@@ -52,7 +52,7 @@ namespace Terminal
                     using (MemoryStream ms = new MemoryStream())
                     {
                         var ser = new DataContractJsonSerializer(typeof(TelemetryCollection));
-                        ser.WriteObject(ms, rnd.Next());
+                        ser.WriteObject(ms, Rnd.Next());
                         string json = Encoding.UTF8.GetString(ms.ToArray(), 0, (int)ms.Length);
 
                         streamWriter.Write(json);
@@ -63,17 +63,23 @@ namespace Terminal
 
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (var streamReader = new StreamReader(response.GetResponseStream()))
+                    using (var stream = response.GetResponseStream())
                     {
-                        string resp = streamReader.ReadToEnd();
-                        if (resp == "1")
-                            Console.WriteLine($"SendData StatusCode: {ServiceStatusCode.GoodLogin}.");
-                        else if (resp == "2")
-                            throw new Exception($"SendData StatusCode: {ServiceStatusCode.BadData}.");
-                        else
-                            throw new Exception($"SendData StatusCode: {ServiceStatusCode.BadLogin}.");
+                        if (stream == null)
+                            throw new NullReferenceException();
+
+                        using (var streamReader = new StreamReader(stream))
+                        {
+                            string resp = streamReader.ReadToEnd();
+                            if (resp == "1")
+                                Console.WriteLine($"SendData StatusCode: {ServiceStatusCode.GoodLogin}.");
+                            else if (resp == "2")
+                                throw new Exception($"SendData StatusCode: {ServiceStatusCode.BadData}.");
+                            else
+                                throw new Exception($"SendData StatusCode: {ServiceStatusCode.BadLogin}.");
+                        }
+                        response.Close();
                     }
-                    response.Close();
                 }
             }
             catch (Exception ex)
@@ -87,7 +93,7 @@ namespace Terminal
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main()
+        private static void Main()
         {
             int interval;
 

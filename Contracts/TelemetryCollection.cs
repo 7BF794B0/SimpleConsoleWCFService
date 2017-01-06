@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Device.Location;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 
 namespace Contracts
@@ -8,16 +9,27 @@ namespace Contracts
     /// <summary>
     /// Структура описывающая все телеметрические данных, которые мы отслеживаем.
     /// </summary>
-    public struct Telemetry
+    [Table("TelemetryDetails")]
+    public class Telemetry
     {
+        /// <summary>
+        /// Id.
+        /// </summary>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         /// <summary>
         /// Время записи.
         /// </summary>
         public DateTime Time { get; set; }
         /// <summary>
-        /// Координаты.
+        /// Широта.
         /// </summary>
-        public GeoCoordinate Coordinates { get; set; }
+        public double Latitude { get; set; }
+        /// <summary>
+        /// Долгота.
+        /// </summary>
+        public double Longitude { get; set; }
         /// <summary>
         /// Скорость.
         /// </summary>
