@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ServiceModel.Web;
 
-using NLog;
 using Server.Entities;
+using NLog;
 
 namespace Server
 {

@@ -10,8 +10,6 @@ namespace Terminal
     {
         private readonly TelemetryCollection _dataSet = new TelemetryCollection();
         private bool _firstFlag = true;
-        private GeoCoordinate _tempCoord1;
-        private GeoCoordinate _tempCoord2;
 
         private static double CalculateSpeed(double time, double mileage)
         {
@@ -34,14 +32,15 @@ namespace Terminal
             // Новая дистанция, которую мы проехали за время randomMinutes.
             double newDistanse;
 
+            GeoCoordinate tempCoord;
+
             // Первый элемент списка в формирующийся коллекции должен знать о последнем элементе в предыдущей коллекции.
             if (_firstFlag)
             {
                 tel1 = new Telemetry
                 {
                     Time = DateTime.Now,
-                    Latitude = startLatitude,
-                    Longitude = startLongitude,
+                    Coordinates = new GeoCoordinate(startLatitude, startLongitude),
                     SpeedKmh = 0.0d,
                     Engine = true,
                     TotalMileageKm = 0.0d
@@ -52,18 +51,22 @@ namespace Terminal
             else
             {
                 randomTime = _dataSet.Collection.Last().Time.AddMinutes(rnd.Next(30, 90));
-                newLatitude = _dataSet.Collection.Last().Latitude + rnd.NextDouble();
-                newLongitude = _dataSet.Collection.Last().Longitude + rnd.NextDouble();
 
-                _tempCoord1 = new GeoCoordinate(_dataSet.Collection.Last().Latitude, _dataSet.Collection.Last().Longitude);
-                _tempCoord2 = new GeoCoordinate(newLatitude, newLongitude);
-                newDistanse = _tempCoord1.GetDistanceTo(_tempCoord2);
+                newLatitude = rnd.Next(0, 2) == 0
+                    ? _dataSet.Collection.Last().Coordinates.Latitude + rnd.NextDouble()
+                    : _dataSet.Collection.Last().Coordinates.Latitude + rnd.NextDouble() * -1;
+
+                newLongitude = rnd.Next(0, 2) == 0
+                    ? _dataSet.Collection.Last().Coordinates.Longitude + rnd.NextDouble()
+                    : _dataSet.Collection.Last().Coordinates.Longitude + rnd.NextDouble() * -1;
+
+                tempCoord = new GeoCoordinate(newLatitude, newLongitude);
+                newDistanse = _dataSet.Collection.Last().Coordinates.GetDistanceTo(tempCoord);
 
                 tel1 = new Telemetry
                 {
                     Time = randomTime,
-                    Latitude = newLatitude,
-                    Longitude = newLongitude,
+                    Coordinates = new GeoCoordinate(newLatitude, newLongitude),
                     SpeedKmh = CalculateSpeed((randomTime - _dataSet.Collection.Last().Time).TotalHours, newDistanse),
                     Engine = true,
                     TotalMileageKm = (_dataSet.Collection.Last().TotalMileageKm + newDistanse) / 1000
@@ -74,18 +77,22 @@ namespace Terminal
             }
 
             randomTime = _dataSet.Collection.Last().Time.AddMinutes(rnd.Next(30, 90));
-            newLatitude = _dataSet.Collection.Last().Latitude + rnd.NextDouble();
-            newLongitude = _dataSet.Collection.Last().Longitude + rnd.NextDouble();
 
-            _tempCoord1 = new GeoCoordinate(_dataSet.Collection.Last().Latitude, _dataSet.Collection.Last().Longitude);
-            _tempCoord2 = new GeoCoordinate(newLatitude, newLongitude);
-            newDistanse = _tempCoord1.GetDistanceTo(_tempCoord2);
+            newLatitude = rnd.Next(0, 2) == 0
+                ? _dataSet.Collection.Last().Coordinates.Latitude + rnd.NextDouble()
+                : _dataSet.Collection.Last().Coordinates.Latitude + rnd.NextDouble() * -1;
+
+            newLongitude = rnd.Next(0, 2) == 0
+                ? _dataSet.Collection.Last().Coordinates.Longitude + rnd.NextDouble()
+                : _dataSet.Collection.Last().Coordinates.Longitude + rnd.NextDouble() * -1;
+
+            tempCoord = new GeoCoordinate(newLatitude, newLongitude);
+            newDistanse = _dataSet.Collection.Last().Coordinates.GetDistanceTo(tempCoord);
 
             var tel2 = new Telemetry
             {
                 Time = randomTime,
-                Latitude = newLatitude,
-                Longitude = newLongitude,
+                Coordinates = new GeoCoordinate(newLatitude, newLongitude),
                 SpeedKmh = CalculateSpeed((randomTime - _dataSet.Collection.Last().Time).TotalHours, newDistanse),
                 Engine = true,
                 TotalMileageKm = (_dataSet.Collection.Last().TotalMileageKm + newDistanse) / 1000
@@ -93,18 +100,22 @@ namespace Terminal
             _dataSet.Collection.Add(tel2);
 
             randomTime = _dataSet.Collection.Last().Time.AddMinutes(rnd.Next(30, 90));
-            newLatitude = _dataSet.Collection.Last().Latitude + rnd.NextDouble();
-            newLongitude = _dataSet.Collection.Last().Longitude + rnd.NextDouble();
 
-            _tempCoord1 = new GeoCoordinate(_dataSet.Collection.Last().Latitude, _dataSet.Collection.Last().Longitude);
-            _tempCoord2 = new GeoCoordinate(newLatitude, newLongitude);
-            newDistanse = _tempCoord1.GetDistanceTo(_tempCoord2);
+            newLatitude = rnd.Next(0, 2) == 0
+                ? _dataSet.Collection.Last().Coordinates.Latitude + rnd.NextDouble()
+                : _dataSet.Collection.Last().Coordinates.Latitude + rnd.NextDouble() * -1;
+
+            newLongitude = rnd.Next(0, 2) == 0
+                ? _dataSet.Collection.Last().Coordinates.Longitude + rnd.NextDouble()
+                : _dataSet.Collection.Last().Coordinates.Longitude + rnd.NextDouble() * -1;
+
+            tempCoord = new GeoCoordinate(newLatitude, newLongitude);
+            newDistanse = _dataSet.Collection.Last().Coordinates.GetDistanceTo(tempCoord);
 
             var tel3 = new Telemetry
             {
                 Time = randomTime,
-                Latitude = newLatitude,
-                Longitude = newLongitude,
+                Coordinates = new GeoCoordinate(newLatitude, newLongitude),
                 SpeedKmh = CalculateSpeed((randomTime - _dataSet.Collection.Last().Time).TotalHours, newDistanse),
                 Engine = true,
                 TotalMileageKm = (_dataSet.Collection.Last().TotalMileageKm + newDistanse) / 1000

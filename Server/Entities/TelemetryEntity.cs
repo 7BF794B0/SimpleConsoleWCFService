@@ -1,23 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Device.Location;
-using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Contracts
+namespace Server.Entities
 {
     /// <summary>
-    /// The structure describing all telemetry data that we track.
+    /// Отображение телеметрических данных для работы с БД.
     /// </summary>
-    public struct Telemetry
+    [Table("TelemetryDetails")]
+    public class TelemetryEntity
     {
+        /// <summary>
+        /// Id.
+        /// </summary>
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
         /// <summary>
         /// Время записи.
         /// </summary>
         public DateTime Time { get; set; }
         /// <summary>
-        /// Координаты.
+        /// Широта.
         /// </summary>
-        public GeoCoordinate Coordinates { get; set; }
+        public double Latitude { get; set; }
+        /// <summary>
+        /// Долгота.
+        /// </summary>
+        public double Longitude { get; set; }
         /// <summary>
         /// Скорость.
         /// </summary>
@@ -36,25 +46,5 @@ namespace Contracts
         /// Измеряется в километрах.
         /// </remarks>
         public double TotalMileageKm { get; set; }
-    }
-
-    [DataContract]
-    public class TelemetryCollection
-    {
-        /// <summary>
-        /// A collection of telemetry data.
-        /// </summary>
-        [DataMember]
-        public List<Telemetry> Collection { get; set; }
-
-        public TelemetryCollection()
-        {
-            Collection = new List<Telemetry>();
-        }
-
-        public TelemetryCollection(List<Telemetry> lst)
-        {
-            Collection = lst;
-        }
     }
 }
