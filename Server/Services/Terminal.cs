@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Contracts;
 using Contracts.Interfaces;
-
 using NLog;
 
-namespace Server.Implementations
+namespace Server.Services
 {
-    public class Data : IData
+    public class Terminal : ITerminal
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly List<int> LoggedTerminals = new List<int>();
@@ -22,7 +20,7 @@ namespace Server.Implementations
             if (!LoggedTerminals.Contains(Convert.ToInt32(terminalId)))
                 LoggedTerminals.Add(Convert.ToInt32(terminalId));
 
-            Logger.Info($"The client with id: {terminalId} logged");
+            Logger.Info($"The terminal with id: {terminalId} logged");
         }
 
         public ServiceStatusCode SendData(string terminalId, TelemetryCollection lst)
@@ -33,8 +31,8 @@ namespace Server.Implementations
                 {
                     if (
                         Math.Abs(lst.Collection[i].Coordinates.GetDistanceTo(lst.Collection[i + 1].Coordinates) -
-                                 (lst.Collection[i + 1].TotalMileageKm - lst.Collection[i].TotalMileageKm)*1000) < 500000000000000.0d) // Где 500 - это погрешность в измерениях [метры].
-                                                                                                                           // Хотя тесты показали, что точность можно ужесточить и уменьшить до ~70.
+                                 (lst.Collection[i + 1].TotalMileageKm - lst.Collection[i].TotalMileageKm) * 1000) < 500000000000000.0d) // Где 500 - это погрешность в измерениях [метры].
+                                                                                                                                         // Хотя тесты показали, что точность можно ужесточить и уменьшить до ~70.
                     {
                         // Время в пути.
                         var time = (lst.Collection[i + 1].Time - lst.Collection[i].Time).TotalHours;
@@ -44,18 +42,18 @@ namespace Server.Implementations
                         // Проверка на соответствие скоростей и времени.
                         if (!(Math.Abs(lst.Collection[i + 1].SpeedKmh - distance / time) < 5000000000000)) // Где 5 - это погрешность в измерениях [км/ч]
                         {
-                            Logger.Error($"The client with the id: {terminalId} sent is not the correct data.");
+                            Logger.Error($"The terminal with the id: {terminalId} sent is not the correct data.");
                             return ServiceStatusCode.BadData;
                         }
                     }
                     else
                     {
-                        Logger.Error($"The client with the id: {terminalId} sent is not the correct data.");
+                        Logger.Error($"The terminal with the id: {terminalId} sent is not the correct data.");
                         return ServiceStatusCode.BadData;
                     }
                 }
 
-                Logger.Info($"The client has connected with id: {terminalId}");
+                Logger.Info($"The terminal has connected with id: {terminalId}");
 
                 new System.Threading.Tasks.Task(() => DbMaster.InsertData(lst.ToEntities())).Start();
 
@@ -70,10 +68,10 @@ namespace Server.Implementations
                     Logger.Info($"Telemetry, TotalMileage: {t.TotalMileageKm}");
                 }
 
-                return ServiceStatusCode.GoodLogin;
+                return ServiceStatusCode.SuccessSend;
             }
 
-            Logger.Error($"The client with the id: {terminalId} could not send the data because it has not been logged.");
+            Logger.Error($"The terminal with the id: {terminalId} could not send the data because it has not been logged.");
             return ServiceStatusCode.BadLogin;
         }
     }

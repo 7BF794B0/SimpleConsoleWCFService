@@ -4,13 +4,13 @@ using System.ServiceModel.Web;
 namespace Contracts.Interfaces
 {
     [ServiceContract]
-    public interface IData
+    public interface ITerminal
     {
         /// <summary>
         /// Зафиксировать подключение нового терминала.
         /// </summary>
         /// <param name="terminalId">Id терминала.</param>
-        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminals/login/{terminalId}")]
+        [WebInvoke(BodyStyle = WebMessageBodyStyle.Wrapped, Method = "GET", ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminal/login/{terminalId}")]
         [OperationContract]
         void Login(string terminalId);
 
@@ -19,7 +19,7 @@ namespace Contracts.Interfaces
         /// </summary>
         /// <param name="terminalId">Id терминала.</param>
         /// <param name="data">Телеметрические данные.</param>
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminals/{terminalId}")]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "terminal/{terminalId}")]
         [OperationContract]
         ServiceStatusCode SendData(string terminalId, TelemetryCollection data);
     }

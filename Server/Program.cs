@@ -2,6 +2,7 @@
 using System.ServiceModel.Web;
 
 using Server.Entities;
+using Server.Services;
 using NLog;
 
 namespace Server
@@ -9,7 +10,7 @@ namespace Server
     internal class Program
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -22,12 +23,19 @@ namespace Server
                 tc.Database.Initialize(false);
                 Logger.Info("The database was created successfully");
 
-                using (var host = new WebServiceHost(typeof(Implementations.Data)))
+                using (var host = new WebServiceHost(typeof(Terminal)))
                 {
                     host.Open();
-                    Logger.Info("Service started...");
-                    Console.ReadKey();
+                    Logger.Info("Terminal Service started...");
                 }
+                /*
+                using (var host = new WebServiceHost(typeof(Client)))
+                {
+                    host.Open();
+                    Logger.Info("Client Service started...");
+                }
+                */
+                Console.ReadKey();
             }
             catch (Exception ex)
             {

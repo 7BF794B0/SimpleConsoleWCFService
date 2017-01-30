@@ -22,7 +22,7 @@ namespace Terminal
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminals/login/{terminalId}");
+                var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminal/login/{terminalId}");
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     Console.WriteLine($"LogIn StatusCode: {response.StatusCode}.");
@@ -43,7 +43,7 @@ namespace Terminal
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminals/{(int)obj}");
+                var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminal/{(int)obj}");
                 request.ContentType = "application/json";
                 request.Method = "POST";
 
@@ -71,10 +71,10 @@ namespace Terminal
                         using (var streamReader = new StreamReader(stream))
                         {
                             string resp = streamReader.ReadToEnd();
-                            if (resp == "1")
-                                Console.WriteLine($"SendData StatusCode: {ServiceStatusCode.GoodLogin}.");
-                            else if (resp == "2")
+                            if (resp == "2")
                                 throw new Exception($"SendData StatusCode: {ServiceStatusCode.BadData}.");
+                            if (resp == "3")
+                                Console.WriteLine($"SendData StatusCode: {ServiceStatusCode.SuccessSend}.");
                             else
                                 throw new Exception($"SendData StatusCode: {ServiceStatusCode.BadLogin}.");
                         }

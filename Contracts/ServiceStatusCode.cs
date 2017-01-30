@@ -4,6 +4,7 @@
     {
         BadLogin = 0,
         GoodLogin = 1,
-        BadData = 2
+        BadData = 2,
+        SuccessSend = 3
     }
 }

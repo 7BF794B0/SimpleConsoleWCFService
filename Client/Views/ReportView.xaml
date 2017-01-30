@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="Client.Views.ReportView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:VM="clr-namespace:Client.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Client.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <UserControl.DataContext>
+        <VM:ReportViewModel />
+    </UserControl.DataContext>
+    <StackPanel
+        Margin="12,12,12,12"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Stretch"
+        FlowDirection="RightToLeft">
+        <Label Content=":Доступные терминалы" />
+        <ComboBox ItemsSource="{Binding ListOfTerminals}" />
+    </StackPanel>
+</UserControl>
