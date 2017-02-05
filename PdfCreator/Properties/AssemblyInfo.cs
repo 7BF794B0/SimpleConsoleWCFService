@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("OpenStreetMapLibrary")]
+[assembly: AssemblyTitle("PdfCreator")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("OpenStreetMapLibrary")]
+[assembly: AssemblyProduct("PdfCreator")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("c2572cd8-5b02-4fd4-8e7b-fbf3aa0f82a0")]
+[assembly: Guid("667729e8-c645-4615-bb22-e807fdea7ac9")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

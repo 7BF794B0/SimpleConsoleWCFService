@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{32CF6466-8416-4983-B238-B8C18C1C2221}</ProjectGuid>
+    <ProjectGuid>{150DA2BB-F13A-4A4E-8F29-43F35BF0434C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Client</RootNamespace>
@@ -41,6 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -63,6 +64,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="ViewModels\ReportViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\MainView.xaml.cs">
@@ -90,12 +92,10 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="NLog.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -105,12 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OpenStreetMapLibrary\OpenStreetMapLibrary.csproj">
-      <Project>{e33122a9-da54-4ade-8066-bcb85f0884ad}</Project>
-      <Name>OpenStreetMapLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\MainView.xaml">
@@ -127,8 +121,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Commands\" />
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj">
+      <Project>{d12a1224-8465-4bde-84f7-94a4ae8b8285}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenStreetMapLibrary\OpenStreetMapLibrary.csproj">
+      <Project>{c2572cd8-5b02-4fd4-8e7b-fbf3aa0f82a0}</Project>
+      <Name>OpenStreetMapLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PdfCreator\PdfCreator.csproj">
+      <Project>{667729e8-c645-4615-bb22-e807fdea7ac9}</Project>
+      <Name>PdfCreator</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

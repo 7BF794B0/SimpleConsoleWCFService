@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Transactions;
+using System.Xml;
+using Contracts;
 using Server.Entities;
 
 namespace Server
@@ -48,6 +51,22 @@ namespace Server
                 }
 
                 scope.Complete();
+            }
+        }
+
+        public int[] GetTerminalsInfo()
+        {
+            using (var context = new TelemetryContext())
+            {
+                return context.Telemetry.Select(x => x.TerminalId).Distinct().ToArray();
+            }
+        }
+
+        public List<TelemetryEntity> GetDataByTerminalId(int terminalId)
+        {
+            using (var context = new TelemetryContext())
+            {
+                return context.Telemetry.Where(x => x.TerminalId == terminalId).ToList();
             }
         }
     }

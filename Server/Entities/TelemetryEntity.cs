@@ -17,6 +17,10 @@ namespace Server.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         /// <summary>
+        /// Id терминала.
+        /// </summary>
+        public int TerminalId { get; set; }
+        /// <summary>
         /// Время записи.
         /// </summary>
         public DateTime Time { get; set; }

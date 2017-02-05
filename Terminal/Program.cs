@@ -11,18 +11,18 @@ namespace Terminal
 {
     internal class Program
     {
+        private static int _terminalId;
         private static Timer _timer;
         private static readonly RandomGenerator Rnd = new RandomGenerator();
 
         /// <summary>
         /// Авторизоваться на сервере.
         /// </summary>
-        /// <param name="terminalId"></param>
-        private static void LogIn(int terminalId)
+        private static void LogIn()
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminal/login/{terminalId}");
+                var request = (HttpWebRequest)WebRequest.Create($"http://localhost:8084/terminal/login/{_terminalId}");
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     Console.WriteLine($"LogIn StatusCode: {response.StatusCode}.");
@@ -52,7 +52,9 @@ namespace Terminal
                     using (MemoryStream ms = new MemoryStream())
                     {
                         var ser = new DataContractJsonSerializer(typeof(TelemetryCollection));
-                        ser.WriteObject(ms, Rnd.Next());
+                        var randomTelemetryData = Rnd.Next();
+                        randomTelemetryData.TerminalId = _terminalId;
+                        ser.WriteObject(ms, randomTelemetryData);
                         string json = Encoding.UTF8.GetString(ms.ToArray(), 0, (int)ms.Length);
 
                         streamWriter.Write(json);
@@ -99,17 +101,18 @@ namespace Terminal
 
             Console.Write("Enter the value of re-treatment interval (in seconds): ");
             while (!int.TryParse(Console.ReadLine(), out interval))
-                Console.Write("Error. Entered invalid value. Enter value of re-treatment interval (in milliseconds): ");
+                Console.Write("Error. Entered invalid value. Enter value of re-treatment interval (in seconds): ");
             interval = interval*1000;
 
             int id;
             Console.Write("Enter your id: ");
             while (!int.TryParse(Console.ReadLine(), out id))
                 Console.Write("Error. Entered invalid value. Enter your id: ");
+            _terminalId = id;
 
             try
             {
-                LogIn(id);
+                LogIn();
 
                 Console.Write("Next?");
                 Console.ReadKey();

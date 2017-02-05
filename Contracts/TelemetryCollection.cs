@@ -47,6 +47,12 @@ namespace Contracts
         [DataMember]
         public List<Telemetry> Collection { get; set; }
 
+        /// <summary>
+        /// A collection of telemetry data.
+        /// </summary>
+        [DataMember]
+        public int TerminalId { get; set; }
+
         public TelemetryCollection()
         {
             Collection = new List<Telemetry>();
